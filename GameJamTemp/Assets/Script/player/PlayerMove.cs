@@ -70,7 +70,7 @@ public class PlayerMove : MonoBehaviour
                     Vector3 hitPos = hit.transform.position;
                     hitPos.y -= 0.49f;
                     Debug.DrawRay(hitPos, move - this.transform.position);
-                    if (Physics.Raycast(hitPos, move - this.transform.position, 0.5f, (1 << 9) | (1 << 10) | (1 << 12))) // 벽일경우
+                    if (Physics.Raycast(hitPos, move - this.transform.position, 0.5f, (1 << 9) | (1 << 10) | (1 << 12) | (1 << 13))) // 벽일경우
                     {
                         moveCheck = true;
                         return;
