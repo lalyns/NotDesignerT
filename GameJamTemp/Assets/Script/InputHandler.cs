@@ -51,7 +51,6 @@ public class InputHandler : MonoBehaviour
                 yAxis = 0;
         }
 
-        Debug.Log(string.Format("XAxis : {0}, YAxis : {1}", xAxis, yAxis));
         _LightSource.SetPosition(xAxis, yAxis);
     }
 

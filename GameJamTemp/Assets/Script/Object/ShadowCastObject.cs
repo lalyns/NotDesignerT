@@ -116,7 +116,7 @@ public class ShadowCastObject : MonoBehaviour
 
     public void Update()
     {
-        _TopFloor.SetActive(SetTopFloor());
+        //_TopFloor.SetActive(SetTopFloor());
 
         _ShadowMeshFilter.mesh = null;
 
