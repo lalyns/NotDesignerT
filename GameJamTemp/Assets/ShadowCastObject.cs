@@ -88,6 +88,13 @@ public class ShadowCastObject : MonoBehaviour
             SetShadowVerticesPosition(shadowCastTransforms, lightDirection);
             CreateShadowMesh(_ShadowVertices);
         }
+
+        else
+        {
+            Mesh temp = new Mesh();
+            shadowMeshFilter.mesh = temp;
+        }
+
     }
 
     public Vector3 GroundHitPoint(Transform start, Vector3 direction)
