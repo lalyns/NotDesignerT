@@ -145,8 +145,6 @@ public class ShadowCastObject : MonoBehaviour
         ray.origin = start;
         ray.direction = direction;
 
-        //Debug.Log("빛의 방향 : " + ray.direction);
-
         RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 1000f, 1000f, 1 << 10, QueryTriggerInteraction.Ignore);
 
         foreach(RaycastHit hit in hitAll)
