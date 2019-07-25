@@ -12,7 +12,7 @@ namespace GameLibrary
         public const int        LAYER_MAPCOLLIDER       = 12;
         public const int        LAYER_BOX               = 13;
 
-        public const float      RAY_DISTANCE            = 1f;
+        public const float      RAY_DISTANCE            = 2f;
 
         public static int       GAMESCENE_NUMBER        = 0;
 

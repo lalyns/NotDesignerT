@@ -18,8 +18,10 @@ public class ShadowCastObject : MonoBehaviour
     Vector3 _CheckDirection;
     bool _IsConnected;
 
-    GameObject _ShadowObject;
-    public GameObject[] _Shadows;
+    GameObject _ShadowFirstObject;
+    public GameObject[] _ShadowsFirst;
+    GameObject _ShadowSecondObject;
+    public GameObject[] _ShadowsSecond;
 
     public GameObject _ShadowTarget;
 
@@ -65,20 +67,25 @@ public class ShadowCastObject : MonoBehaviour
 
         _LightPosition = _LightSourceScript._LightPosition;
 
+        Vector3 lightDirection = GetLightDirection(_LightSource, _Ground);
+
         DecideShadowCastPosition(_LightSource);
 
         bool isGround = true;
-        if (_ShadowObject != null)
+        if (_ShadowFirstObject != null)
         {
-            isGround &= GroundCheck(_ShadowObject.transform.position, Vector3.down);
+            isGround &= GroundCheck(_ShadowFirstObject.transform.position, Vector3.down);
         }
-
-        Vector3 lightDirection = GetLightDirection(_LightSource, _Ground);
 
         _IsConnected = CheckConnected();
 
 
-        foreach (GameObject shadow in _Shadows)
+        foreach (GameObject shadow in _ShadowsFirst)
+        {
+            shadow.SetActive(false);
+        }
+
+        foreach (GameObject shadow in _ShadowsSecond)
         {
             shadow.SetActive(false);
         }
@@ -86,7 +93,17 @@ public class ShadowCastObject : MonoBehaviour
         if (!_IsConnected && _BlockLevel > 1 && isGround &&
             _LightPosition != LightSource.LightSourcePosition.Center)
         {
-            ShadowMesh();
+            SetActiveShadowFirst();
+
+            if (_BlockLevel > 2)
+            {
+                bool isShadow = true;
+
+                isShadow &= GroundCheck(_ShadowSecondObject.transform.position, Vector3.down);
+
+                if(isShadow)
+                    SetActiveShadowSecond();
+            }
         }
 
     }
@@ -109,9 +126,14 @@ public class ShadowCastObject : MonoBehaviour
             if (hit.transform == this.transform)
                 continue;
 
+            if (hit.transform.tag == "Ground")
+                continue;
+            
+
             if (hit.transform != null)
             {
-                _ShadowTarget = hit.transform.gameObject;
+                Debug.Log(hit.transform.name);
+
                 isGround = true;
                 break;
             }
@@ -134,25 +156,29 @@ public class ShadowCastObject : MonoBehaviour
         if(_LightPosition == LightSource.LightSourcePosition.Right)
         {
             _CheckDirection = Vector3.left;
-            _ShadowObject = _Shadows[3];
+            _ShadowFirstObject = _ShadowsFirst[3];
+            _ShadowSecondObject = _ShadowsSecond[3];
         }
         // 광원이 왼쪽에 존재
         else if (_LightPosition == LightSource.LightSourcePosition.Left)
         {
             _CheckDirection = Vector3.right;
-            _ShadowObject = _Shadows[1];
+            _ShadowFirstObject = _ShadowsFirst[1];
+            _ShadowSecondObject = _ShadowsSecond[1];
         }
         // 광원이 위쪽에 존재
         else if (_LightPosition == LightSource.LightSourcePosition.Up)
         {
             _CheckDirection = Vector3.back;
-            _ShadowObject = _Shadows[2];
+            _ShadowFirstObject = _ShadowsFirst[2];
+            _ShadowSecondObject = _ShadowsSecond[2];
         }
         // 광원이 아래쪽에 존재
         else if(_LightPosition == LightSource.LightSourcePosition.Down)
         {
             _CheckDirection = Vector3.forward;
-            _ShadowObject = _Shadows[0];
+            _ShadowFirstObject = _ShadowsFirst[0];
+            _ShadowSecondObject = _ShadowsSecond[0];
         }
     }
     
@@ -179,9 +205,13 @@ public class ShadowCastObject : MonoBehaviour
         return IsConnected;
     }
 
-    public void ShadowMesh()
+    public void SetActiveShadowFirst()
     {
-        _ShadowObject.SetActive(true);
+        _ShadowFirstObject.SetActive(true);
     }
-    
+
+    public void SetActiveShadowSecond()
+    {
+        _ShadowSecondObject.SetActive(true);
+    }
 }
