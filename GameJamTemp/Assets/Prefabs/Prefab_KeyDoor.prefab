@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!65 &5807795020805855347
+--- !u!65 &8307434668247700296
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,7 +8,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3978351426156830778}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 9001867944602969494}
   - component: {fileID: 9001867944602969495}
   m_Layer: 0
-  m_Name: KeyDoor
+  m_Name: Prefab_KeyDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -222,38 +222,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9019417636311602402, guid: bb6370436e3823c478b728fb6976353f,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.031328
-      objectReference: {fileID: 0}
-    - target: {fileID: 9019417636311602402, guid: bb6370436e3823c478b728fb6976353f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.06659
-      objectReference: {fileID: 0}
-    - target: {fileID: 9019417636311602402, guid: bb6370436e3823c478b728fb6976353f,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.021104
-      objectReference: {fileID: 0}
-    - target: {fileID: 9019417636311602402, guid: bb6370436e3823c478b728fb6976353f,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.4665
-      objectReference: {fileID: 0}
-    - target: {fileID: 9019417636311602402, guid: bb6370436e3823c478b728fb6976353f,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.4665
-      objectReference: {fileID: 0}
-    - target: {fileID: 9019417636311602402, guid: bb6370436e3823c478b728fb6976353f,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.4665
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 9019417636318608130, guid: bb6370436e3823c478b728fb6976353f, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb6370436e3823c478b728fb6976353f, type: 3}
 --- !u!1 &3978351426156830778 stripped
 GameObject:
