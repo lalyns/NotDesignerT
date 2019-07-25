@@ -55,6 +55,11 @@ public class PlayerMove : MonoBehaviour
                         StartMove();
                     }
 
+                    if (hit.transform.gameObject.layer == GameLibrary.GameManager.LAYER_BOX)
+                    {
+                        StartMove();
+                    }
+
                     if (hit.transform.gameObject.layer == GameLibrary.GameManager.LAYER_SHADOW)
                     {
                         MoveDownStair();
@@ -199,8 +204,6 @@ public class PlayerMove : MonoBehaviour
 
     public void PushBox()
     {
-        Debug.Log("박스밀기준비");
-
         Block.transform.position = Vector3.MoveTowards(Block.transform.position, oldBoxPos + tDir, speed * Time.deltaTime);
 
         Debug.Log(Vector3.Distance(Block.transform.position, oldBoxPos + tDir));
