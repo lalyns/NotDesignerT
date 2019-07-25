@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
     Vector3 move;
     Vector3 oldmove;
     Vector3 target;
-
+    Vector3 oldBoxPos;
     bool moveCheck;
 
     bool isBlock = false;
@@ -191,6 +191,7 @@ public class PlayerMove : MonoBehaviour
         {
             isBlock = true;
             Block = hit.transform.gameObject;
+            oldBoxPos = Block.transform.position;
         }
 
         return isBlock;
@@ -200,18 +201,17 @@ public class PlayerMove : MonoBehaviour
     {
         Debug.Log("박스밀기준비");
 
-        if (Physics.Raycast(this.transform.position, tDir, out RaycastHit hit, 1.0f, (1 << GameLibrary.GameManager.LAYER_BOX)))
+        Block.transform.position = Vector3.MoveTowards(Block.transform.position, oldBoxPos + tDir, speed * Time.deltaTime);
+
+        Debug.Log(Vector3.Distance(Block.transform.position, oldBoxPos + tDir));
+
+        if (Vector3.Distance(Block.transform.position, oldBoxPos + tDir) <= 0)
         {
-            hit.transform.position = Vector3.MoveTowards(hit.transform.position, hit.transform.position + tDir, speed * Time.deltaTime);
-
-            Debug.Log(Vector3.Distance(hit.transform.position, hit.transform.position + tDir));
-
-            if (Vector3.Distance(hit.transform.position, hit.transform.position + tDir) <= 0)
-            {
-                isBlock = true;
-            }
+            isBlock = true;
+            moveCheck = true;
         }
     }
+    
 
 
     public void MoveUpStair()
