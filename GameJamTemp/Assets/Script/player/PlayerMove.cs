@@ -21,7 +21,6 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MoveDir(new Vector3(-1, 0, 0));
         InputMove();
         StartMove();
     }
@@ -32,22 +31,22 @@ public class PlayerMove : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                move = this.transform.position + new Vector3(0, 0, -1);
+                move = this.transform.position + MoveDir(new Vector3(0, 0, -1));
                 moveCheck = false;
             }
             else if (Input.GetKeyDown(KeyCode.S))
             {
-                move = this.transform.position + new Vector3(0, 0, 1);
+                move = this.transform.position + MoveDir(new Vector3(0, 0, 1));
                 moveCheck = false;
             }
             else if (Input.GetKeyDown(KeyCode.A))
             {
-                move = this.transform.position + new Vector3(1, 0, 0);
+                move = this.transform.position + MoveDir(new Vector3(1, 0, 0));
                 moveCheck = false;
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
-                move = this.transform.position + new Vector3(-1,0,0);
+                move = this.transform.position + MoveDir(new Vector3(-1,0,0));
                 moveCheck = false;
             }
         }
@@ -74,7 +73,7 @@ public class PlayerMove : MonoBehaviour
 
     bool MoveRay()
     {
-        float maxDistance = 5;
+        float maxDistance = 0.2f;
         RaycastHit hit;
 
         Vector3 thisPos = this.transform.position;
@@ -97,9 +96,6 @@ public class PlayerMove : MonoBehaviour
     // 내가지금 가야할거리가 몇x 몇y인가 
     Vector3 MoveDir(Vector3 dir)
     {
-        // ray발사 자기 바로 앞블럭이 그림자블럭이라면
-        // 몇x만큼간다.
-        // 몇y만큼간다.
         Vector3 returnVector = Vector3.zero;
 
         RaycastHit hit;
@@ -107,22 +103,52 @@ public class PlayerMove : MonoBehaviour
         Vector3 thisPos = this.transform.position;
         thisPos.y -= 0.4f;
 
-        Debug.DrawRay(thisPos, dir);
         if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 9))) // 그림자블럭이있는지판단
         {
             if (Physics.Raycast(thisPos, dir, out hit, 1000, (1 << 10))) // 다음블럭이 몇번째 블럭인지 판단
             {
-                //x 넣기
-                returnVector.x = (int)Vector3.Distance(thisPos, hit.point);
-                Debug.Log(returnVector);
+                Vector3 hitPos = hit.point;
+                returnVector.x = (int)Vector3.Distance(thisPos, hitPos) + 1;
 
-                if (Physics.Raycast(hit.point, Vector3.up, out hit, 1000, (1 << 11)))
+                if (Physics.Raycast(hitPos, Vector3.up, out hit, 1000, (1 << 11)))
                 {
-                    //y 넣기
+                    returnVector.y = (int)Vector3.Distance(hitPos, hit.point);
                 }
             }
+
+            returnVector.x *= dir.x;
+            returnVector.z *= dir.z;
+            return returnVector;
         }
 
-        return Vector3.zero;
+        thisPos.y -= 1.2f;
+
+        if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 9))) // 그림자블럭이 아래에있다면
+        {
+            if (Physics.Raycast(thisPos, dir, out hit, 1000, (1 << 10))) // 다음블럭이 몇번째 블럭인지 판단
+            {
+                Vector3 hitPos = hit.point;
+                returnVector.x = (int)Vector3.Distance(thisPos, hitPos) + 2;
+
+                if (Physics.Raycast(hitPos, Vector3.up, out hit, 1000, (1 << 11)))
+                {
+                    returnVector.y = -1 * ((int)Vector3.Distance(hitPos, hit.point));
+                }
+            }
+
+            returnVector.x *= dir.x;
+            returnVector.z *= dir.z;
+            return returnVector;
+        }
+
+        return dir;
     }
+
+         
 }
+
+
+
+///내가 큐브위에올라가있을때 아래 그림자가있다면
+/// x만큼앞으로
+/// y만큼아래로
