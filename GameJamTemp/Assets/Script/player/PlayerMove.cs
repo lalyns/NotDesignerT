@@ -67,10 +67,9 @@ public class PlayerMove : MonoBehaviour
             }
             else
             {
-
-                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.6f, (1 << 10))) // 벽일경우
+                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.7f, (1 << 10))) // 벽일경우
                 {
-                    if (Physics.Raycast(hit.transform.position, move - this.transform.position, 0.6f, (1 << 12) | (1 << 10))) // 벽일경우
+                    if (Physics.Raycast(hit.transform.position, move - this.transform.position, 0.7f, (1 << 12) | (1 << 10))) // 벽일경우
                     {
                         moveCheck = true;
                         return;
