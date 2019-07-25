@@ -116,7 +116,7 @@ public class ShadowCastObject : MonoBehaviour
 
     public void Update()
     {
-        _TopFloor.SetActive(SetTopFloor());
+        //_TopFloor.SetActive(SetTopFloor());
 
         _ShadowMeshFilter.mesh = null;
 
@@ -261,36 +261,25 @@ public class ShadowCastObject : MonoBehaviour
         }
         ;
 
-        if (_LightPosition == LightSource.LightSourcePosition.Left ||
-            _LightPosition == LightSource.LightSourcePosition.Right ||
-            _LightPosition == LightSource.LightSourcePosition.Up)
-        {
             shadowMesh.triangles = new int[]
             {
             0,2,1,
+            0,1,2,
             1,2,3,
+            1,3,2,
             0,4,2,
-            0,5,4,
-            0,1,5,
-            1,3,5,
-            2,4,5,
-            2,5,3,
-            };
-        }
-        else if(_LightPosition == LightSource.LightSourcePosition.Down)
-        {
-            shadowMesh.triangles = new int[]
-            {
-            0,2,1,
-            1,2,3,
             0,2,4,
+            0,5,4,
             0,4,5,
+            0,1,5,
             0,5,1,
+            1,3,5,
             1,5,3,
             2,4,5,
+            2,5,4,
             2,5,3,
+            2,3,5
             };
-        }
 
         _ShadowMeshFilter.mesh = shadowMesh;
         _Collider.sharedMesh = shadowMesh;
