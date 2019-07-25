@@ -7,35 +7,32 @@ public class LightSource : MonoBehaviour
     public LightSourcePosition _LightPosition;
     public float _Direction;
 
-    // Start is called before the first frame update
-    void Start()
+    public void SetPosition(int x, int y)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        SetPosition();
-    }
-
-    void SetPosition()
-    {
-        if(_LightPosition == LightSourcePosition.Left)
+        if(x < 0 && y == 0)
         {
+            _LightPosition = LightSourcePosition.Left;
             transform.position = new Vector3(-_Direction, 10, 0);
         }
-        else if(_LightPosition == LightSourcePosition.Right)
+        else if(x > 0 && y == 0)
         {
+            _LightPosition = LightSourcePosition.Right;
             transform.position = new Vector3(_Direction, 10, 0);
         }
-        if (_LightPosition == LightSourcePosition.Up)
+        else if (y > 0 && x == 0)
         {
+            _LightPosition = LightSourcePosition.Up;
             transform.position = new Vector3(0, 10, _Direction);
         }
-        else if (_LightPosition == LightSourcePosition.Down)
+        else if (y < 0 && x == 0)
         {
+            _LightPosition = LightSourcePosition.Down;
             transform.position = new Vector3(0, 10, -_Direction);
+        }
+        else if(y == 0 && x == 0)
+        {
+            _LightPosition = LightSourcePosition.Center;
+            transform.position = new Vector3(0, 10, 0);
         }
     }
 
@@ -43,6 +40,7 @@ public class LightSource : MonoBehaviour
     {
         Left,
         Right,
+        Center,
         Up,
         Down,
     }
