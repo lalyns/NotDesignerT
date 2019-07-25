@@ -6,7 +6,7 @@ public class PlayerMove : MonoBehaviour
 {
     public float speed;
 
-    public int _CurrentLevel;
+    public int _CurrentLevel = 0;
 
     Vector3 move;
     Vector3 target;
@@ -22,7 +22,7 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GroundCheck();
+        //GroundCheck();
         InputMove();
         StartMove();
     }
@@ -61,26 +61,24 @@ public class PlayerMove : MonoBehaviour
             // 벽이라면 ray로 타겟을만들어서?
             if (MoveRay())
             {
-                Debug.Log("그냥이동");
                 this.transform.position = Vector3.MoveTowards(this.transform.position, target, speed * Time.deltaTime);
             }
             else
             {
-                Debug.Log("마가힌이동");
                 if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.5f, (1 << 13))) // 박스일경우
                 {
                     Vector3 hitPos = hit.transform.position;
-                    hitPos.y = 0.5f;
+                    hitPos.y -= 0.49f;
                     Debug.DrawRay(hitPos, move - this.transform.position);
-                    if (Physics.Raycast(hitPos, move - this.transform.position, out RaycastHit aa, 0.5f, (1 << 9) | (1 << 10) | (1 << 12))) // 벽일경우
+                    if (Physics.Raycast(hitPos, move - this.transform.position, 0.5f, (1 << 9) | (1 << 10) | (1 << 12))) // 벽일경우
                     {
-                        Debug.Log(aa.transform.gameObject.name);
                         moveCheck = true;
                         return;
                     }
-                    Debug.Log("daaa");
+
                     Vector3 tmove = hit.transform.position + (move - this.transform.position);
                     hit.transform.position = Vector3.MoveTowards(hit.transform.position, tmove, speed * Time.deltaTime);
+
                 }
                 else
                     this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
@@ -133,6 +131,7 @@ public class PlayerMove : MonoBehaviour
             returnVector.x = (light._Direction / 10) + 1;
             returnVector.y = (int)(hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel);
             returnVector.z = (light._Direction / 10) + 1;
+            _CurrentLevel = (int)returnVector.y;
 
             returnVector.x *= dir.x;
             returnVector.z *= dir.z;
@@ -143,7 +142,9 @@ public class PlayerMove : MonoBehaviour
         if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x , (1 << 9))) // 그림자블럭이 아래에있다면
         {
             returnVector.x = (light._Direction / 10) +1;
-            returnVector.y = _CurrentLevel - hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel;
+            Debug.Log(hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel - _CurrentLevel);
+
+            returnVector.y = (hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel + 1) - _CurrentLevel;
             returnVector.z = (light._Direction / 10) + 1;
 
 
@@ -171,11 +172,12 @@ public class PlayerMove : MonoBehaviour
 
             if(hit.transform.GetComponent<ShadowCastObject>() == null)
             {
-                _CurrentLevel = 1;
+                _CurrentLevel = 0;
             }
             else
             {
-                _CurrentLevel = hit.transform.GetComponent<ShadowCastObject>()._BlockLevel + 1;
+                Debug.Log(hit.transform.GetComponent<ShadowCastObject>()._BlockLevel);
+                _CurrentLevel = hit.transform.GetComponent<ShadowCastObject>()._BlockLevel;
                 break;
             }
         }
