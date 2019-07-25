@@ -19,7 +19,12 @@ public class InputHandler : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GameLibrary.GameManager.GameSceneRestart();
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             yAxis += 1;
 
