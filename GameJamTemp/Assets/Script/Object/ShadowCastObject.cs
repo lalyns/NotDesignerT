@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ShadowCastObject : MonoBehaviour
 {
-    public int _BlockLevel;
+    [System.NonSerialized] public int _BlockLevel;
 
     public Transform _VertexParent;
-    Transform[] _Vertices;
+    public Transform[] _Vertices;
 
     GameObject _LightSource;
     LightSource _LightSourceScript;
@@ -17,7 +17,7 @@ public class ShadowCastObject : MonoBehaviour
     Vector3 _CheckDirection;
     bool _IsConnected;
 
-    Transform[] _ShadowVertices;
+    public Transform[] _ShadowVertices;
     public GameObject _ShadowObject;
     public MeshFilter _ShadowMeshFilter;
     public MeshRenderer _ShadowMeshRenderer;
@@ -116,38 +116,34 @@ public class ShadowCastObject : MonoBehaviour
 
     public void Update()
     {
+        _TopFloor.SetActive(SetTopFloor());
+
+        _ShadowMeshFilter.mesh = null;
+
         _LightPosition = _LightSourceScript._LightPosition;
 
+        Vector3[] shadowCastTransforms = DecideShadowCastPosition(_LightSource);
         Vector3 lightDirection = GetLightDirection(_LightSource, _Ground);
 
-        Transform[] shadowCastTransforms = DecideShadowCastDirection(_LightSource);
+        SetShadowVerticesPosition(shadowCastTransforms, lightDirection);
 
         _IsConnected = CheckConnected();
 
-        if (!_IsConnected)
+        if (!_IsConnected && _BlockLevel > 0 &&
+            _LightPosition != LightSource.LightSourcePosition.Center)
         {
-            SetShadowVerticesPosition(shadowCastTransforms, lightDirection);
             CreateShadowMesh(_ShadowVertices);
         }
 
-        else
-        {
-            Mesh temp = new Mesh();
-            _ShadowMeshFilter.mesh = temp;
-        }
-
-        _TopFloor.SetActive(SetTopFloor());
     }
 
-    public Vector3 GroundHitPoint(Transform start, Vector3 direction)
+    public Vector3 GroundHitPoint(Vector3 start, Vector3 direction)
     {
         Vector3 hitPoint = Vector3.zero;
 
         Ray ray = new Ray();
-        ray.origin = start.position;
+        ray.origin = start;
         ray.direction = direction;
-
-        //Debug.Log("빛의 방향 : " + ray.direction);
 
         RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 1000f, 1000f, 1 << 10, QueryTriggerInteraction.Ignore);
 
@@ -173,51 +169,48 @@ public class ShadowCastObject : MonoBehaviour
         return direction;
     }
 
-    public Transform[] DecideShadowCastDirection(GameObject lightSource)
+    public Vector3[] DecideShadowCastPosition(GameObject lightSource)
     {
-        Transform[] transforms = new Transform[4];
-
-        Vector3 lightPos = lightSource.transform.position;
-        Vector3 thisPos = this.transform.position;
+        Vector3[] positions = new Vector3[4];
 
         // 광원이 오른쪽에 존재
         if(_LightPosition == LightSource.LightSourcePosition.Right)
         {
-            transforms[0] = _Vertices[0];
-            transforms[1] = _Vertices[1];
-            transforms[2] = _Vertices[4];
-            transforms[3] = _Vertices[5];
+            positions[0] = _Vertices[0].position;
+            positions[1] = _Vertices[1].position;
+            positions[2] = _Vertices[4].position;
+            positions[3] = _Vertices[5].position;
             _CheckDirection = Vector3.left;
         }
         // 광원이 왼쪽에 존재
         else if (_LightPosition == LightSource.LightSourcePosition.Left)
         {
-            transforms[0] = _Vertices[2];
-            transforms[1] = _Vertices[3];
-            transforms[2] = _Vertices[6];
-            transforms[3] = _Vertices[7];
+            positions[0] = _Vertices[2].position;
+            positions[1] = _Vertices[3].position;
+            positions[2] = _Vertices[6].position;
+            positions[3] = _Vertices[7].position;
             _CheckDirection = Vector3.right;
         }
         // 광원이 위쪽에 존재
         else if (_LightPosition == LightSource.LightSourcePosition.Up)
         {
-            transforms[0] = _Vertices[1];
-            transforms[1] = _Vertices[2];
-            transforms[2] = _Vertices[5];
-            transforms[3] = _Vertices[6];
+            positions[0] = _Vertices[1].position;
+            positions[1] = _Vertices[2].position;
+            positions[2] = _Vertices[5].position;
+            positions[3] = _Vertices[6].position;
             _CheckDirection = Vector3.forward;
         }
         // 광원이 아래쪽에 존재
         else if(_LightPosition == LightSource.LightSourcePosition.Down)
         {
-            transforms[0] = _Vertices[0];
-            transforms[1] = _Vertices[3];
-            transforms[2] = _Vertices[4];
-            transforms[3] = _Vertices[7];
+            positions[0] = _Vertices[0].position;
+            positions[1] = _Vertices[3].position;
+            positions[2] = _Vertices[4].position;
+            positions[3] = _Vertices[7].position;
             _CheckDirection = Vector3.back;
         }
 
-        return transforms;
+        return positions;
     }
     
     public bool CheckConnected()
@@ -242,14 +235,14 @@ public class ShadowCastObject : MonoBehaviour
         return IsConnected;
     }
 
-    public void SetShadowVerticesPosition(Transform[] shadowCastTransforms, Vector3 lightDirection)
+    public void SetShadowVerticesPosition(Vector3[] vector3s, Vector3 lightDirection)
     {
-        _ShadowVertices[0].position = shadowCastTransforms[0].position;
-        _ShadowVertices[1].position = shadowCastTransforms[1].position;
-        _ShadowVertices[2].position = shadowCastTransforms[2].position;
-        _ShadowVertices[3].position = shadowCastTransforms[3].position;
-        _ShadowVertices[4].position = GroundHitPoint(shadowCastTransforms[0], lightDirection);
-        _ShadowVertices[5].position = GroundHitPoint(shadowCastTransforms[1], lightDirection);
+        _ShadowVertices[0].position = vector3s[0];
+        _ShadowVertices[1].position = vector3s[1];
+        _ShadowVertices[2].position = vector3s[2];
+        _ShadowVertices[3].position = vector3s[3];
+        _ShadowVertices[4].position = GroundHitPoint(vector3s[0], lightDirection);
+        _ShadowVertices[5].position = GroundHitPoint(vector3s[1], lightDirection);
     }
 
     public void CreateShadowMesh(Transform[] shadowCastTransforms)
@@ -268,9 +261,12 @@ public class ShadowCastObject : MonoBehaviour
         }
         ;
 
-
-        shadowMesh.triangles = new int[]
-        { 
+        if (_LightPosition == LightSource.LightSourcePosition.Left ||
+            _LightPosition == LightSource.LightSourcePosition.Right ||
+            _LightPosition == LightSource.LightSourcePosition.Up)
+        {
+            shadowMesh.triangles = new int[]
+            {
             0,2,1,
             1,2,3,
             0,4,2,
@@ -279,9 +275,22 @@ public class ShadowCastObject : MonoBehaviour
             1,3,5,
             2,4,5,
             2,5,3,
-
+            };
         }
-        ;
+        else if(_LightPosition == LightSource.LightSourcePosition.Down)
+        {
+            shadowMesh.triangles = new int[]
+            {
+            0,2,1,
+            1,2,3,
+            0,2,4,
+            0,4,5,
+            0,5,1,
+            1,5,3,
+            2,4,5,
+            2,5,3,
+            };
+        }
 
         _ShadowMeshFilter.mesh = shadowMesh;
         _Collider.sharedMesh = shadowMesh;

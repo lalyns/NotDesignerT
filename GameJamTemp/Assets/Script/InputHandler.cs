@@ -6,32 +6,55 @@ public class InputHandler : MonoBehaviour
 {
     public LightSource _LightSource;
 
+    int xAxis;
+    int yAxis;
+
     public void Awake()
     {
         _LightSource = GameObject.FindGameObjectWithTag("LightSource").GetComponent<LightSource>();
+
+        xAxis = 0;
+        yAxis = 0;
     }
 
     public void Update()
     {
         if(Input.GetKeyDown(KeyCode.UpArrow))
         {
-            _LightSource._LightPosition = LightSource.LightSourcePosition.Up;
+            yAxis += 1;
+
+            if (xAxis > 0 || xAxis < 0)
+                xAxis = 0;
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            _LightSource._LightPosition = LightSource.LightSourcePosition.Down;
+            yAxis -= 1;
+
+            if (xAxis > 0 || xAxis < 0)
+                xAxis = 0;
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            _LightSource._LightPosition = LightSource.LightSourcePosition.Left;
+            xAxis -= 1;
+
+            if (yAxis > 0 || yAxis < 0)
+                yAxis = 0;
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            _LightSource._LightPosition = LightSource.LightSourcePosition.Right;
+            xAxis += 1;
+
+            if (yAxis > 0 || yAxis < 0)
+                yAxis = 0;
         }
+
+        xAxis = (int)Mathf.Clamp(xAxis, -1, 1);
+        yAxis = (int)Mathf.Clamp(yAxis, -1, 1);
+
+        _LightSource.SetPosition(xAxis, yAxis);
     }
 
 
