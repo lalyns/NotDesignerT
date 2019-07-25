@@ -149,7 +149,6 @@ public class PlayerMove : MonoBehaviour
         if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x * 2)) // 그림자블럭이 아래에있다면
         {
             Debug.Log("내려간다");
-            Debug.Log(hit.transform.name);
             returnVector.x = (light._Direction / 10) +1;
             returnVector.y = hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel;
             returnVector.z = (light._Direction / 10) + 1;
