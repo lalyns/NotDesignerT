@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ShadowCastObject : MonoBehaviour
 {
+    public int _BlockLevel;
+
     public Transform _VertexParent;
     Transform[] _Vertices;
 
@@ -20,10 +22,37 @@ public class ShadowCastObject : MonoBehaviour
     public MeshFilter shadowMeshFilter;
     public MeshRenderer shadowMeshRenderer;
     public MeshCollider collider;
-    public GameObject shadowEndObject;
-    
+
+
     public void Awake()
     {
+        Ray ray = new Ray();
+        ray.origin = this.transform.position;
+        ray.direction = Vector3.down;
+
+        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 100f, 100f, 1 << 10, QueryTriggerInteraction.Ignore);
+
+        foreach( RaycastHit hit in hitAll)
+        {
+            if(hit.transform == this.transform)
+            {
+                continue;
+            }
+
+            if(hit.transform.GetComponent<ShadowCastObject>() == null)
+            {
+                _BlockLevel = 0;
+                Debug.Log(transform.name + " : 0으로만든다");
+            }
+            else
+            {
+                Debug.Log(transform.name + " : 아래에 있음");
+                _BlockLevel = hit.transform.GetComponent<ShadowCastObject>()._BlockLevel + 1;
+                break;
+
+            }
+        }
+
         _LightSource = GameObject.FindGameObjectWithTag("LightSource");
         _LightSourceScript = _LightSource.GetComponent<LightSource>();
 
@@ -73,7 +102,7 @@ public class ShadowCastObject : MonoBehaviour
 
         foreach (Transform trans in shadowCastTransforms)
         {
-            Debug.Log(trans.localPosition);
+            //Debug.Log(trans.localPosition);
         }
 
         //Debug.DrawLine(shadowCastTransforms[0].position, GroundHitPoint(shadowCastTransforms[0], lightDirection), Color.red);
@@ -106,7 +135,7 @@ public class ShadowCastObject : MonoBehaviour
         ray.origin = start.position;
         ray.direction = direction;
 
-        Debug.Log("빛의 방향 : " + ray.direction);
+        //Debug.Log("빛의 방향 : " + ray.direction);
 
         RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 1000f, 1000f, 1 << 10, QueryTriggerInteraction.Ignore);
 
@@ -116,7 +145,6 @@ public class ShadowCastObject : MonoBehaviour
                 continue;
             if (hit.transform != null)
             {
-                shadowEndObject = hit.transform.gameObject;
                 hitPoint = hit.point;
                 break;
             }
