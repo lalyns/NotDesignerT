@@ -63,6 +63,11 @@ public class PlayerMove : MonoBehaviour
                     {
                         MoveDownStair();
                     }
+
+                }
+                else
+                {
+                    moveCheck = true;
                 }
 
 
@@ -77,7 +82,13 @@ public class PlayerMove : MonoBehaviour
                 {
                     PushBox();
                 }
+                
+                if(Block.layer == GameLibrary.GameManager.LAYER_BLOCK)
+                {
+                    moveCheck = true;
+                }
             }
+
         }
     }
 
@@ -187,6 +198,7 @@ public class PlayerMove : MonoBehaviour
 
     public void PushBox()
     {
+        moveCheck = true;
         // 자기앞에 박스가있을대
         // 박스는 자기의속도만큼 이동한다.
         // 그러나 박스앞에 벽 or 박스 or 
