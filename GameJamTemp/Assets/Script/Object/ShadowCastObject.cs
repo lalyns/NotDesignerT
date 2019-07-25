@@ -20,6 +20,7 @@ public class ShadowCastObject : MonoBehaviour
     public MeshFilter shadowMeshFilter;
     public MeshRenderer shadowMeshRenderer;
     public MeshCollider collider;
+    public GameObject shadowEndObject;
     
     public void Awake()
     {
@@ -115,6 +116,7 @@ public class ShadowCastObject : MonoBehaviour
                 continue;
             if (hit.transform != null)
             {
+                shadowEndObject = hit.transform.gameObject;
                 hitPoint = hit.point;
                 break;
             }
