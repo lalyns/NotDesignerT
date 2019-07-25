@@ -26,9 +26,6 @@ public class CameraControl : MonoBehaviour
             Debug.Log(_CameraCount);
             SetCamera();
         }
-        
-
-
     }
 
     public void SetCamera()
