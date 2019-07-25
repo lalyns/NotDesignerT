@@ -41,9 +41,6 @@ public class PlayerMove : MonoBehaviour
             InputMove();
         }
 
-
-
-        Debug.Log(isBlock);
         if (!moveCheck)
         {
             if (!isBlock) // 앞에 아무것도없다
@@ -53,7 +50,6 @@ public class PlayerMove : MonoBehaviour
 
                 if (Physics.Raycast(Ground.transform.position, tDir, out hit, 1.0f)) // 못움직인다.
                 {
-                    Debug.Log(hit.transform.gameObject.name);
                     if (hit.transform.gameObject.layer == GameLibrary.GameManager.LAYER_BLOCK)
                     {
                         StartMove();
@@ -96,33 +92,37 @@ public class PlayerMove : MonoBehaviour
     {
         if (moveCheck)
         {
-
             oldmove = this.transform.position;
 
             if (Input.GetKeyDown(KeyCode.W))
             {
                 tDir = new Vector3(0, 0, -1);
                 move = this.transform.position + new Vector3(0, 0, -1);
+                this.transform.rotation = Quaternion.LookRotation(new Vector3(-1, 0, 0));
                 moveCheck = false;
             }
             else if (Input.GetKeyDown(KeyCode.S))
             {
                 tDir = new Vector3(0, 0, 1);
                 move = this.transform.position + new Vector3(0, 0, 1);
+                this.transform.rotation = Quaternion.LookRotation(new Vector3(1, 0, 0));
                 moveCheck = false;
             }
             else if (Input.GetKeyDown(KeyCode.A))
             {
                 tDir = new Vector3(1, 0, 0);
                 move = this.transform.position + new Vector3(1, 0, 0);
+                this.transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, -1));
                 moveCheck = false;
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
                 tDir = new Vector3(-1, 0, 0);
                 move = this.transform.position + new Vector3(-1, 0, 0);
+                this.transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 1));
                 moveCheck = false;
             }
+
         }
     }
 
@@ -198,13 +198,22 @@ public class PlayerMove : MonoBehaviour
 
     public void PushBox()
     {
-        moveCheck = true;
-        // 자기앞에 박스가있을대
-        // 박스는 자기의속도만큼 이동한다.
-        // 그러나 박스앞에 벽 or 박스 or 
+        Debug.Log("박스밀기준비");
+
+        if (Physics.Raycast(this.transform.position, tDir, out RaycastHit hit, 1.0f, (1 << GameLibrary.GameManager.LAYER_BOX)))
+        {
+            hit.transform.position = Vector3.MoveTowards(hit.transform.position, hit.transform.position + tDir, speed * Time.deltaTime);
+
+            Debug.Log(Vector3.Distance(hit.transform.position, hit.transform.position + tDir));
+
+            if (Vector3.Distance(hit.transform.position, hit.transform.position + tDir) <= 0)
+            {
+                isBlock = true;
+            }
+        }
     }
 
-    
+
     public void MoveUpStair()
     {
         moveTimer += Time.deltaTime;
