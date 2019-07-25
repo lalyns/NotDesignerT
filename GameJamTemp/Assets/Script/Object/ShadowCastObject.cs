@@ -162,7 +162,9 @@ public class ShadowCastObject : MonoBehaviour
                 continue;
             if (hit.transform != null)
             {
+                Debug.Log(this.transform.name + " -> " + hit.transform.name);
                 hitPoint = hit.point;
+
                 break;
             }
         }
