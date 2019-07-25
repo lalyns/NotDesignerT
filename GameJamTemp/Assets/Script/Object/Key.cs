@@ -8,6 +8,7 @@ public class Key : MonoBehaviour
     {
         if(other.transform.tag == "Player")
         {
+            GetComponent<AudioSource>().Play();
             GetComponentInParent<KeyDoor>()._IsOpen = true;
             this.gameObject.SetActive(false);
         }
