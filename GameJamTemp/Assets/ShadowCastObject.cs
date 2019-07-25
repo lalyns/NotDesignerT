@@ -90,12 +90,21 @@ public class ShadowCastObject : MonoBehaviour
         ray.origin = start.position;
         ray.direction = direction;
 
-        RaycastHit hit;
-        if(Physics.Raycast(ray.origin, ray.direction * 1000f, out hit, 1000f, 1<<10, QueryTriggerInteraction.Ignore))
-        {
-            hitPoint = hit.point;
-        }
+        Debug.Log("빛의 방향 : " + ray.direction);
 
+        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 1000f, 1000f, 1 << 10, QueryTriggerInteraction.Ignore);
+
+        foreach(RaycastHit hit in hitAll)
+        {
+            if (hit.transform == this.transform)
+                continue;
+            if (hit.transform != null)
+            {
+                hitPoint = hit.point;
+                break;
+            }
+        }
+            
         return hitPoint;
     }
 
