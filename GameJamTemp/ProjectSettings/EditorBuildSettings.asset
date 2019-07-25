@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 3b0eafa06eab6d448872250800db1e87
   - enabled: 1
-    path: Assets/Scenes/Stage_Select.unity
-    guid: 4e517c6f7c47a404e9b69e12b997487e
+    path: Assets/Scenes/Level_test 0.unity
+    guid: c73cacec05e73e54b81e91688349366c
   - enabled: 1
     path: Assets/Scenes/Level_test.unity
     guid: d68f6781aefd9ef4d95b440f3e09f3fa
