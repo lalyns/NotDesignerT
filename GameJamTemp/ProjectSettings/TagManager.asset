@@ -3,9 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - LightSource
-  - Ground
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -16,8 +14,8 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - CastShadow
-  - Floor
+  - Shadow
+  - block
   - 
   - 
   - 
