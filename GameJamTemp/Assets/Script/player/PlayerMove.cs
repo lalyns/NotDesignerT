@@ -68,15 +68,17 @@ public class PlayerMove : MonoBehaviour
                 if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.5f, (1 << 13))) // 박스일경우
                 {
                     Vector3 hitPos = hit.transform.position;
-                    hitPos.y -= 0.49f;
-                    Debug.DrawRay(hitPos, move - this.transform.position);
-                    if (Physics.Raycast(hitPos, move - this.transform.position, 0.5f, (1 << 9) | (1 << 10) | (1 << 12) | (1 << 13))) // 벽일경우
+                    hitPos.y -= 0.4f;
+                    Vector3 tmove = hit.transform.position + (move - this.transform.position);
+                    Debug.DrawRay(hitPos, tmove);
+                    if (Physics.Raycast(hitPos, tmove, out RaycastHit aa, 0.5f, (1 << 9) | (1 << 10) | (1 << 12) | (1 << 13))) // 벽일경우
                     {
+                        Debug.Log(aa.transform.gameObject.name);
                         moveCheck = true;
                         return;
                     }
 
-                    Vector3 tmove = hit.transform.position + (move - this.transform.position);
+                    
                     hit.transform.position = Vector3.MoveTowards(hit.transform.position, tmove, speed * Time.deltaTime);
 
                 }
