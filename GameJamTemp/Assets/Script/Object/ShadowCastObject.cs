@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameLibrary;
 
 public class ShadowCastObject : MonoBehaviour
 {
     [System.NonSerialized] public int _BlockLevel;
 
     public Transform _VertexParent;
-    public Transform[] _Vertices;
+    Transform[] _Vertices;
 
     GameObject _LightSource;
     LightSource _LightSourceScript;
@@ -17,11 +18,11 @@ public class ShadowCastObject : MonoBehaviour
     Vector3 _CheckDirection;
     bool _IsConnected;
 
-    public Transform[] _ShadowVertices;
+    Transform[] _ShadowVertices;
     public GameObject _ShadowObject;
-    public MeshFilter _ShadowMeshFilter;
-    public MeshRenderer _ShadowMeshRenderer;
-    public MeshCollider _Collider;
+    MeshFilter _ShadowMeshFilter;
+    MeshRenderer _ShadowMeshRenderer;
+    MeshCollider _ShadowCollider;
 
     public GameObject _TopFloor;
 
@@ -30,6 +31,10 @@ public class ShadowCastObject : MonoBehaviour
         _LightSource = GameObject.FindGameObjectWithTag("LightSource");
         _LightSourceScript = _LightSource.GetComponent<LightSource>();
         _Ground = GameObject.FindGameObjectWithTag("Ground");
+
+        _ShadowMeshFilter = _ShadowObject.GetComponent<MeshFilter>();
+        _ShadowMeshRenderer = _ShadowObject.GetComponent<MeshRenderer>();
+        _ShadowCollider = _ShadowObject.GetComponent<MeshCollider>();
 
         SetLevel();
         SetVertices();
@@ -42,7 +47,8 @@ public class ShadowCastObject : MonoBehaviour
         ray.origin = this.transform.position;
         ray.direction = Vector3.down;
 
-        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 100f, 100f, 1 << 10, QueryTriggerInteraction.Ignore);
+        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * GameManager.RAY_DISTANCE,
+            GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
         foreach (RaycastHit hit in hitAll)
         {
@@ -71,7 +77,8 @@ public class ShadowCastObject : MonoBehaviour
         ray.origin = this.transform.position;
         ray.direction = Vector3.up;
 
-        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 100f, 100f, 1 << 10, QueryTriggerInteraction.Ignore);
+        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * GameManager.RAY_DISTANCE,
+            GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
         if(hitAll.Length == 0)
         {
@@ -145,7 +152,8 @@ public class ShadowCastObject : MonoBehaviour
         ray.origin = start;
         ray.direction = direction;
 
-        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 1000f, 1000f, 1 << 10, QueryTriggerInteraction.Ignore);
+        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * GameManager.RAY_DISTANCE, 
+            GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
         foreach(RaycastHit hit in hitAll)
         {
@@ -221,7 +229,8 @@ public class ShadowCastObject : MonoBehaviour
         checkRay.origin = transform.position;
         checkRay.direction = _CheckDirection;
 
-        RaycastHit[] hitAll = Physics.RaycastAll(checkRay.origin, checkRay.direction * 100f, 100f, 1 << 10, QueryTriggerInteraction.Ignore);
+        RaycastHit[] hitAll = Physics.RaycastAll(checkRay.origin, checkRay.direction * GameManager.RAY_DISTANCE,
+            GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
         foreach(RaycastHit hit in hitAll)
         {
@@ -282,7 +291,7 @@ public class ShadowCastObject : MonoBehaviour
             };
 
         _ShadowMeshFilter.mesh = shadowMesh;
-        _Collider.sharedMesh = shadowMesh;
+        _ShadowCollider.sharedMesh = shadowMesh;
     }
     
 }
