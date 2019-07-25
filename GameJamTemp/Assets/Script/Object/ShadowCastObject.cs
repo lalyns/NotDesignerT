@@ -126,6 +126,7 @@ public class ShadowCastObject : MonoBehaviour
         //_TopFloor.SetActive(SetTopFloor());
 
         _ShadowMeshFilter.mesh = null;
+        _ShadowCollider.sharedMesh = null;
 
         _LightPosition = _LightSourceScript._LightPosition;
 
@@ -161,7 +162,9 @@ public class ShadowCastObject : MonoBehaviour
                 continue;
             if (hit.transform != null)
             {
+                Debug.Log(this.transform.name + " -> " + hit.transform.name);
                 hitPoint = hit.point;
+
                 break;
             }
         }
