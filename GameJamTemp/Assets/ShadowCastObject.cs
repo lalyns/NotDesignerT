@@ -12,6 +12,9 @@ public class ShadowCastObject : MonoBehaviour
     LightSource.LightSourcePosition _LightPosition;
     GameObject _Ground;
 
+    Vector3 _CheckDirection;
+    bool _IsConnected;
+
     Transform[] _ShadowVertices;
     public GameObject shadowObject;
     public MeshFilter shadowMeshFilter;
@@ -72,14 +75,19 @@ public class ShadowCastObject : MonoBehaviour
             Debug.Log(trans.localPosition);
         }
 
-        Debug.DrawLine(shadowCastTransforms[0].position, GroundHitPoint(shadowCastTransforms[0], lightDirection), Color.red);
-        Debug.DrawLine(shadowCastTransforms[1].position, GroundHitPoint(shadowCastTransforms[1], lightDirection), Color.red);
+        //Debug.DrawLine(shadowCastTransforms[0].position, GroundHitPoint(shadowCastTransforms[0], lightDirection), Color.red);
+        //Debug.DrawLine(shadowCastTransforms[1].position, GroundHitPoint(shadowCastTransforms[1], lightDirection), Color.red);
 
         //Mesh shadowMesh = CreateShadowMesh(shadowCastTransforms);
         //shadowMeshFilter.sharedMesh = shadowMesh;
 
-        SetShadowVerticesPosition(shadowCastTransforms, lightDirection);
-        CreateShadowMesh(_ShadowVertices);
+        _IsConnected = CheckConnected();
+
+        if (!_IsConnected)
+        {
+            SetShadowVerticesPosition(shadowCastTransforms, lightDirection);
+            CreateShadowMesh(_ShadowVertices);
+        }
     }
 
     public Vector3 GroundHitPoint(Transform start, Vector3 direction)
@@ -130,6 +138,7 @@ public class ShadowCastObject : MonoBehaviour
             transforms[1] = _Vertices[1];
             transforms[2] = _Vertices[4];
             transforms[3] = _Vertices[5];
+            _CheckDirection = Vector3.left;
         }
         // 광원이 왼쪽에 존재
         else if (_LightPosition == LightSource.LightSourcePosition.Left)
@@ -138,6 +147,7 @@ public class ShadowCastObject : MonoBehaviour
             transforms[1] = _Vertices[3];
             transforms[2] = _Vertices[6];
             transforms[3] = _Vertices[7];
+            _CheckDirection = Vector3.right;
         }
         // 광원이 위쪽에 존재
         else if (_LightPosition == LightSource.LightSourcePosition.Up)
@@ -146,6 +156,7 @@ public class ShadowCastObject : MonoBehaviour
             transforms[1] = _Vertices[2];
             transforms[2] = _Vertices[5];
             transforms[3] = _Vertices[6];
+            _CheckDirection = Vector3.forward;
         }
         // 광원이 아래쪽에 존재
         else if(_LightPosition == LightSource.LightSourcePosition.Down)
@@ -154,11 +165,34 @@ public class ShadowCastObject : MonoBehaviour
             transforms[1] = _Vertices[3];
             transforms[2] = _Vertices[4];
             transforms[3] = _Vertices[7];
+            _CheckDirection = Vector3.back;
         }
 
         return transforms;
     }
     
+    public bool CheckConnected()
+    {
+        bool IsConnected = false;
+
+        Ray checkRay = new Ray();
+        checkRay.origin = transform.position;
+        checkRay.direction = _CheckDirection;
+
+        RaycastHit[] hitAll = Physics.RaycastAll(checkRay.origin, checkRay.direction * 100f, 100f, 1 << 10, QueryTriggerInteraction.Ignore);
+
+        foreach(RaycastHit hit in hitAll)
+        {
+            if (hit.transform == this.transform)
+                continue;
+
+            if (hit.transform != null)
+                IsConnected = true;
+        }
+
+        return IsConnected;
+    }
+
     public void SetShadowVerticesPosition(Transform[] shadowCastTransforms, Vector3 lightDirection)
     {
         _ShadowVertices[0].position = shadowCastTransforms[0].position;
@@ -199,7 +233,6 @@ public class ShadowCastObject : MonoBehaviour
 
         }
         ;
-
 
         shadowMeshFilter.mesh = shadowMesh;
         collider.sharedMesh = shadowMesh;
