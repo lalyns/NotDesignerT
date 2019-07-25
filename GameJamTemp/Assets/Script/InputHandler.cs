@@ -21,7 +21,7 @@ public class InputHandler : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.UpArrow))
         {
-            yAxis = 1;
+            yAxis += 1;
 
             if (xAxis > 0 || xAxis < 0)
                 xAxis = 0;
@@ -29,7 +29,7 @@ public class InputHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            yAxis = -1;
+            yAxis -= 1;
 
             if (xAxis > 0 || xAxis < 0)
                 xAxis = 0;
@@ -37,7 +37,7 @@ public class InputHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            xAxis = -1;
+            xAxis -= 1;
 
             if (yAxis > 0 || yAxis < 0)
                 yAxis = 0;
@@ -45,11 +45,14 @@ public class InputHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            xAxis = 1;
+            xAxis += 1;
 
             if (yAxis > 0 || yAxis < 0)
                 yAxis = 0;
         }
+
+        xAxis = (int)Mathf.Clamp(xAxis, -1, 1);
+        yAxis = (int)Mathf.Clamp(yAxis, -1, 1);
 
         _LightSource.SetPosition(xAxis, yAxis);
     }
