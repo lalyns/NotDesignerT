@@ -9,6 +9,7 @@ public class PlayerMove : MonoBehaviour
     public int _CurrentLevel = 0;
 
     Vector3 move;
+    Vector3 oldmove;
     Vector3 target;
     bool moveCheck;
 
@@ -31,6 +32,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (moveCheck)
         {
+            oldmove = this.transform.position;
             if (Input.GetKeyDown(KeyCode.W))
             {
                 move = this.transform.position + MoveDir(new Vector3(0, 0, -1));
@@ -65,36 +67,35 @@ public class PlayerMove : MonoBehaviour
             }
             else
             {
-                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.5f, (1 << 13))) // 박스일경우
-                {
-                    Vector3 hitPos = hit.transform.position;
-                    hitPos.y -= 0.4f;
-                    Vector3 tmove = hit.transform.position + (move - this.transform.position);
-                    Debug.DrawRay(hitPos, tmove);
-                    if (Physics.Raycast(hitPos, tmove, out RaycastHit aa, 0.5f, (1 << 9) | (1 << 10) | (1 << 12) | (1 << 13))) // 벽일경우
-                    {
-                        Debug.Log(aa.transform.gameObject.name);
-                        moveCheck = true;
-                        return;
-                    }
+                 if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.5f, (1 << 13)) && !moveCheck ) // 박스일경우
+                 {
+                     Vector3 hitPos = hit.transform.position;
+                     hitPos.y -= 0.4f;
+                     Debug.DrawRay(hitPos, move - oldmove);
+                     if (Physics.Raycast(hitPos, move - oldmove, 1.0f, (1 << 9) | (1 << 10) | (1 << 12) | (1 << 13))) // 벽일경우
+                     {
+                         moveCheck = true;
+                         return;
+                     }
 
-                    
-                    hit.transform.position = Vector3.MoveTowards(hit.transform.position, tmove, speed * Time.deltaTime);
+                     Vector3 tmove = hit.transform.position + (move - oldmove);
+                     hit.transform.GetComponent<BoxMove>().InputData(true, speed, tmove);
+                 }
+                 else
+                     this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
+             }
 
-                }
-                else
-                    this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
+             if (Vector3.Distance(this.transform.position, move) == 0)
+                 moveCheck = true;
+                this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
+
             }
-
-            if (Vector3.Distance(this.transform.position, move) == 0)
-                moveCheck = true;
-        }
     }
 
     // 맵을올라갈때 대각선을 타고 올라가게 해주는함수
     bool MoveRay()
     {
-        float maxDistance = 0.2f;
+        float maxDistance = 0.6f;
         RaycastHit hit;
 
         Vector3 thisPos = this.transform.position;
@@ -103,9 +104,10 @@ public class PlayerMove : MonoBehaviour
         Vector3 tmove = move;
         tmove.y = thisPos.y;
         Vector3 rayDir = tmove - thisPos;
-
+        Debug.DrawRay(thisPos, rayDir);
         if (Physics.Raycast(thisPos, rayDir, out hit, maxDistance, (1 << 9)))
         {
+            Debug.Log("aaa");
             target = hit.point;
             target.y += 0.6f;
             return true;
@@ -133,6 +135,7 @@ public class PlayerMove : MonoBehaviour
             returnVector.x = (light._Direction / 10) + 1;
             returnVector.y = (int)(hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel);
             returnVector.z = (light._Direction / 10) + 1;
+
             _CurrentLevel = (int)returnVector.y;
 
             returnVector.x *= dir.x;
