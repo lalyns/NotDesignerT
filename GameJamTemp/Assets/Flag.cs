@@ -9,7 +9,15 @@ public class Flag : MonoBehaviour
     {
         if(other.transform.tag == "Player")
         {
-            GameManager.GameSceneChange();
+            if (GameManager.GAMESCENE_NUMBER != 5)
+            {
+                GameManager.GameSceneChange();
+            }
+            else if(GameManager.GAMESCENE_NUMBER == 5)
+            {
+
+            }
+
             Debug.Log("스테이지 클리어!");
         }
     }

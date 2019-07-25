@@ -14,13 +14,13 @@ public class KeyDoor : MonoBehaviour
     {
         if (_IsOpen)
         {
-            if (time < 3f)
+            if (time < 1f)
             {
                 _Door.transform.position -= new Vector3(0f, _Speed, 0f) * Time.deltaTime;
                 time += Time.deltaTime;
             }
 
-            else if(time >= 3f)
+            else if(time >= 1f)
             {
                 this.gameObject.SetActive(false);
             }
