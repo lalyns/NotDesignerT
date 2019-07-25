@@ -2225,6 +2225,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.88555
       objectReference: {fileID: 0}
+    - target: {fileID: 6353991597063084326, guid: 9c94aeba4234f2e41b7cb97bd689a872,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978351426156830778, guid: 9c94aeba4234f2e41b7cb97bd689a872,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6353991597065078758, guid: 9c94aeba4234f2e41b7cb97bd689a872,
         type: 3}
       propertyPath: m_CastShadows
@@ -2615,6 +2625,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 3.5149
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353991597063084326, guid: 9c94aeba4234f2e41b7cb97bd689a872,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978351426156830778, guid: 9c94aeba4234f2e41b7cb97bd689a872,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6353991597065078758, guid: 9c94aeba4234f2e41b7cb97bd689a872,
         type: 3}
@@ -5139,6 +5159,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Prefab_Flag
+      objectReference: {fileID: 0}
+    - target: {fileID: 548576040191432767, guid: 6322bff2e4760dc49859053262b53cb5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 548576040191432764, guid: 6322bff2e4760dc49859053262b53cb5,
         type: 3}
