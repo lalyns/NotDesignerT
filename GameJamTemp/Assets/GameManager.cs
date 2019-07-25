@@ -11,6 +11,6 @@ namespace GameLibrary
         public const int       LAYER_MAPCOLLIDER       = 1 << 12;
         public const int       LAYER_BOX               = 1 << 13;
 
-        public const float     RAY_DISTANCE            = 2f;
+        public const float     RAY_DISTANCE            = 1.5f;
     }
 }
