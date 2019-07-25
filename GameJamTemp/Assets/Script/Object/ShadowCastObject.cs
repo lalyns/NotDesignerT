@@ -122,17 +122,6 @@ public class ShadowCastObject : MonoBehaviour
 
         Transform[] shadowCastTransforms = DecideShadowCastDirection(_LightSource);
 
-        foreach (Transform trans in shadowCastTransforms)
-        {
-            //Debug.Log(trans.localPosition);
-        }
-
-        //Debug.DrawLine(shadowCastTransforms[0].position, GroundHitPoint(shadowCastTransforms[0], lightDirection), Color.red);
-        //Debug.DrawLine(shadowCastTransforms[1].position, GroundHitPoint(shadowCastTransforms[1], lightDirection), Color.red);
-
-        //Mesh shadowMesh = CreateShadowMesh(shadowCastTransforms);
-        //shadowMeshFilter.sharedMesh = shadowMesh;
-
         _IsConnected = CheckConnected();
 
         if (!_IsConnected)
