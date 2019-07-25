@@ -29,22 +29,22 @@ public class PlayerMove : MonoBehaviour
     {
         if (moveCheck)
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 move = this.transform.position + MoveDir(new Vector3(0, 0, -1));
                 moveCheck = false;
             }
-            else if (Input.GetKeyDown(KeyCode.S))
+            else if (Input.GetKeyDown(KeyCode.W))
             {
                 move = this.transform.position + MoveDir(new Vector3(0, 0, 1));
                 moveCheck = false;
             }
-            else if (Input.GetKeyDown(KeyCode.A))
+            else if (Input.GetKeyDown(KeyCode.D))
             {
                 move = this.transform.position + MoveDir(new Vector3(1, 0, 0));
                 moveCheck = false;
             }
-            else if (Input.GetKeyDown(KeyCode.D))
+            else if (Input.GetKeyDown(KeyCode.A))
             {
                 move = this.transform.position + MoveDir(new Vector3(-1,0,0));
                 moveCheck = false;
@@ -77,7 +77,7 @@ public class PlayerMove : MonoBehaviour
         RaycastHit hit;
 
         Vector3 thisPos = this.transform.position;
-        thisPos.y -= 0.5f;
+        thisPos.y -= 0.4f;
 
         Vector3 tmove = move;
         tmove.y = thisPos.y;
@@ -127,7 +127,7 @@ public class PlayerMove : MonoBehaviour
         {
             if (Physics.Raycast(thisPos, dir, out hit, 1000, (1 << 10))) // 다음블럭이 몇번째 블럭인지 판단
             {
-                Vector3 hitPos = hit.point;
+                Vector3 hitPos = hit.point; 
                 returnVector.x = (int)Vector3.Distance(thisPos, hitPos) + 2;
 
                 if (Physics.Raycast(hitPos, Vector3.up, out hit, 1000, (1 << 11)))
@@ -138,6 +138,7 @@ public class PlayerMove : MonoBehaviour
 
             returnVector.x *= dir.x;
             returnVector.z *= dir.z;
+            Debug.Log(returnVector);
             return returnVector;
         }
 
