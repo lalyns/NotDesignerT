@@ -11,7 +11,7 @@ public class Flag : MonoBehaviour
         {
             if (GameManager.GAMESCENE_NUMBER != 5)
             {
-                GameManager.GameSceneChange();
+                GameObject.FindGameObjectWithTag("Canvas").GetComponent<UIManager>()._FadeOut = true;
             }
             else if(GameManager.GAMESCENE_NUMBER == 5)
             {
