@@ -8,6 +8,8 @@ public class PlayerMove : MonoBehaviour
 
     public int _CurrentLevel = 0;
 
+    AudioSource audioSource;
+
     Vector3 tDir;
     Vector3 move;
     Vector3 oldmove;
@@ -26,6 +28,7 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         moveCheck = true;
     }
 
@@ -139,6 +142,7 @@ public class PlayerMove : MonoBehaviour
 
             if (Vector3.Distance(this.transform.position, move) <= 0)
             {
+                audioSource.Play();
                 moveCheck = true;
             }
         }
@@ -210,6 +214,7 @@ public class PlayerMove : MonoBehaviour
 
         if (Vector3.Distance(Block.transform.position, oldBoxPos + tDir) <= 0)
         {
+            audioSource.Play();
             isBlock = true;
             moveCheck = true;
         }
@@ -231,6 +236,7 @@ public class PlayerMove : MonoBehaviour
         }
         if(moveTimer >= 0.4f)
         {
+            audioSource.Play();
             moveCheck = true;
             isBlock = false;
             moveTimer = 0;
@@ -248,6 +254,7 @@ public class PlayerMove : MonoBehaviour
         
         if (moveTimer >= 0.4f)
         {
+            audioSource.Play();
             moveCheck = true;
             isBlock = false;
             moveTimer = 0;
