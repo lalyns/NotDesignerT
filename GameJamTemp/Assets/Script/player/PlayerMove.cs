@@ -8,7 +8,6 @@ public class PlayerMove : MonoBehaviour
 
     public int _CurrentLevel;
 
-    CharacterController cc;
     Vector3 move;
     Vector3 target;
     bool moveCheck;
@@ -17,13 +16,13 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cc = GetComponent<CharacterController>();
         moveCheck = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        MoveDir(new Vector3(0, 0, -1));
         GroundCheck();
         InputMove();
         StartMove();
@@ -70,7 +69,7 @@ public class PlayerMove : MonoBehaviour
                 /// 이동방향에 박스가있을경우 박스도 진행방향으로민다.
                 /// 박스를밀경우 박스앞에 벽 or block or Box가 있을경우 이동을멈춘다. 9 10 12
 
-                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.7f, (1 << 13))) // 벽일경우
+                /*if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.7f, (1 << 13))) // 벽일경우
                 {
                     if (Physics.Raycast(hit.transform.position, move - this.transform.position, 0.5f, (1 << 9) | (1 << 10) | (1 << 12))) // 벽일경우
                     {
@@ -85,7 +84,7 @@ public class PlayerMove : MonoBehaviour
                     Debug.Log(tmove);
                     Debug.Log(move);
                     hit.transform.position = Vector3.MoveTowards(hit.transform.position, tmove, speed * Time.deltaTime);
-                }
+                }*/
 
                 this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
             }
@@ -146,9 +145,11 @@ public class PlayerMove : MonoBehaviour
         }
 
         thisPos.y -= 0.4f;
-        if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 9))) // 그림자블럭이 아래에있다면
+        Debug.DrawRay(thisPos, dir * this.transform.localScale.x , Color.cyan);
+        if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x * 2)) // 그림자블럭이 아래에있다면
         {
             Debug.Log("내려간다");
+            Debug.Log(hit.transform.name);
             returnVector.x = (light._Direction / 10) +1;
             returnVector.y = hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel;
             returnVector.z = (light._Direction / 10) + 1;
