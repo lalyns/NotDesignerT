@@ -252,17 +252,12 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.4665
       objectReference: {fileID: 0}
-<<<<<<< HEAD:GameJamTemp/Assets/Prefabs/KeyDoor.prefab
     - target: {fileID: 9019417636318608130, guid: bb6370436e3823c478b728fb6976353f,
         type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: cbc9767414a19df4f98d8a4bb038dd71, type: 2}
     m_RemovedComponents: []
-=======
-    m_RemovedComponents:
-    - {fileID: 9019417636318608130, guid: bb6370436e3823c478b728fb6976353f, type: 3}
->>>>>>> 1be3364ed77f5aa23c5104f08ad702e6512bb27c:GameJamTemp/Assets/Prefabs/Prefab_KeyDoor.prefab
   m_SourcePrefab: {fileID: 100100000, guid: bb6370436e3823c478b728fb6976353f, type: 3}
 --- !u!1 &3978351426156830778 stripped
 GameObject:

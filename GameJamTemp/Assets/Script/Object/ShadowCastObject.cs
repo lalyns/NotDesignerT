@@ -5,7 +5,7 @@ using GameLibrary;
 
 public class ShadowCastObject : MonoBehaviour
 {
-    [System.NonSerialized] public int _BlockLevel;
+    public int _BlockLevel;
 
     public Transform _VertexParent;
     Transform[] _Vertices;
