@@ -61,31 +61,29 @@ public class PlayerMove : MonoBehaviour
             // 벽이라면 ray로 타겟을만들어서?
             if (MoveRay())
             {
+                Debug.Log("그냥이동");
                 this.transform.position = Vector3.MoveTowards(this.transform.position, target, speed * Time.deltaTime);
             }
             else
             {
-                /// 이동방향에 박스가있을경우 박스도 진행방향으로민다.
-                /// 박스를밀경우 박스앞에 벽 or block or Box가 있을경우 이동을멈춘다. 9 10 12
-
-                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.7f, (1 << 13))) // 벽일경우
+                Debug.Log("마가힌이동");
+                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.5f, (1 << 13))) // 박스일경우
                 {
-                    if (Physics.Raycast(hit.transform.position, move - this.transform.position, 0.5f, (1 << 9) | (1 << 10) | (1 << 12))) // 벽일경우
+                    Vector3 hitPos = hit.transform.position;
+                    hitPos.y = 0.5f;
+                    Debug.DrawRay(hitPos, move - this.transform.position);
+                    if (Physics.Raycast(hitPos, move - this.transform.position, out RaycastHit aa, 0.5f, (1 << 9) | (1 << 10) | (1 << 12))) // 벽일경우
                     {
-                        Debug.Log("막힘");
+                        Debug.Log(aa.transform.gameObject.name);
                         moveCheck = true;
                         return;
                     }
-                    Debug.Log("밀기");
-                    Vector3 tmove = move;
-                    tmove.x *= 2;
-                    tmove.z *= 2;
-                    Debug.Log(tmove);
-                    Debug.Log(move);
-                    hit.transform.position = Vector3.MoveTowards(hit.transform.position, move, speed * Time.deltaTime);
+                    Debug.Log("daaa");
+                    Vector3 tmove = hit.transform.position + (move - this.transform.position);
+                    hit.transform.position = Vector3.MoveTowards(hit.transform.position, tmove, speed * Time.deltaTime);
                 }
-
-                this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
+                else
+                    this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
             }
 
             if (Vector3.Distance(this.transform.position, move) == 0)
@@ -145,7 +143,7 @@ public class PlayerMove : MonoBehaviour
         if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x , (1 << 9))) // 그림자블럭이 아래에있다면
         {
             returnVector.x = (light._Direction / 10) +1;
-            returnVector.y = hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel;
+            returnVector.y = _CurrentLevel - hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel;
             returnVector.z = (light._Direction / 10) + 1;
 
 

@@ -126,6 +126,7 @@ public class ShadowCastObject : MonoBehaviour
         //_TopFloor.SetActive(SetTopFloor());
 
         _ShadowMeshFilter.mesh = null;
+        _ShadowCollider.sharedMesh = null;
 
         _LightPosition = _LightSourceScript._LightPosition;
 
