@@ -21,6 +21,11 @@ namespace GameLibrary
             SceneManager.LoadScene(++GAMESCENE_NUMBER);
         }
 
+        public static void GameSceneRestart()
+        {
+            SceneManager.LoadScene(GAMESCENE_NUMBER);
+        }
+
         public static void GameExit()
         {
             Application.Quit();
