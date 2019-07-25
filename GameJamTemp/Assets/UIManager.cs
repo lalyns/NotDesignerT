@@ -88,7 +88,11 @@ public class UIManager : MonoBehaviour
         if (_FadeTime <= 0.0f)
         {
             _FadeOut = false;
-            GameLibrary.GameManager.GameSceneChange();
+
+            if (GameLibrary.GameManager.GAMESCENE_NUMBER != 5)
+            {
+                GameLibrary.GameManager.GameSceneChange();
+            }
         }
     }
 }
