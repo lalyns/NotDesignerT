@@ -38,7 +38,7 @@ public class ShadowCastObject : MonoBehaviour
         ray.direction = Vector3.down;
 
         RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * GameManager.RAY_DISTANCE,
-            GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
+            GameManager.RAY_DISTANCE, 1 << GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
         foreach (RaycastHit hit in hitAll)
         {
@@ -83,13 +83,6 @@ public class ShadowCastObject : MonoBehaviour
             shadow.SetActive(false);
         }
 
-        if(this.transform.name == "CUBE (11)")
-        {
-            Debug.Log(isGround);
-            Debug.Log(_IsConnected);
-
-        }
-
         if (!_IsConnected && _BlockLevel > 1 && isGround &&
             _LightPosition != LightSource.LightSourcePosition.Center)
         {
@@ -107,7 +100,7 @@ public class ShadowCastObject : MonoBehaviour
         ray.direction = direction;
 
         RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * GameManager.RAY_DISTANCE, 
-            GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
+            GameManager.RAY_DISTANCE, 1 << GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
         Debug.DrawRay(start, direction * GameManager.RAY_DISTANCE, Color.red);
 
@@ -172,7 +165,7 @@ public class ShadowCastObject : MonoBehaviour
         checkRay.direction = _CheckDirection;
 
         RaycastHit[] hitAll = Physics.RaycastAll(checkRay.origin, checkRay.direction * GameManager.RAY_DISTANCE,
-            GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
+            GameManager.RAY_DISTANCE, 1 << GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
         foreach(RaycastHit hit in hitAll)
         {
