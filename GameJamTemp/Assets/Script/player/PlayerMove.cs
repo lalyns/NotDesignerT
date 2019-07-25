@@ -67,7 +67,7 @@ public class PlayerMove : MonoBehaviour
             }
             else
             {
-                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.7f, (1 << 10))) // 벽일경우
+               /* if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.7f, (1 << 10))) // 벽일경우
                 {
                     if (Physics.Raycast(hit.transform.position, move - this.transform.position, 0.7f, (1 << 12) | (1 << 10))) // 벽일경우
                     {
@@ -79,9 +79,9 @@ public class PlayerMove : MonoBehaviour
                     tmove.x *= 2;
                     tmove.z *= 2;
                     hit.transform.position = Vector3.MoveTowards(hit.transform.position, tmove, speed * Time.deltaTime);
-                }
-                this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
+                }*/
 
+                this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
             }
 
             if (Vector3.Distance(this.transform.position, move) == 0)
@@ -108,7 +108,6 @@ public class PlayerMove : MonoBehaviour
             target.y += 0.6f;
             return true;
         }
-
         return false;
     }
 
@@ -122,23 +121,17 @@ public class PlayerMove : MonoBehaviour
         Vector3 thisPos = this.transform.position;
         thisPos.y -= 0.4f;
 
-        if(Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 12))) // 벽일경우
+       /* if(Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 12))) // 벽일경우
         {
             return returnVector; 
-        }
+        }*/
 
-        if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 9))) // 그림자블럭이있는지판단
+        Debug.DrawRay(thisPos, dir);
+        if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x * 2, (1 << 9))) // 그림자블럭이있는지판단
         {
-            if (Physics.Raycast(thisPos, dir, out hit, 1000, (1 << 10))) // 다음블럭이 몇번째 블럭인지 판단
-            {
-                Vector3 hitPos = hit.point;
-                returnVector.x = (int)Vector3.Distance(thisPos, hitPos) + 1;
-
-                if (Physics.Raycast(hitPos, Vector3.up, out hit, 1000, (1 << 11)))
-                {
-                    returnVector.y = (int)Vector3.Distance(hitPos, hit.point);
-                }
-            }
+            returnVector.x = (light._Direction / 10) + 1;
+            returnVector.y = (int)(hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel);
+            returnVector.z = (light._Direction / 10) + 1;
 
             returnVector.x *= dir.x;
             returnVector.z *= dir.z;
@@ -150,6 +143,8 @@ public class PlayerMove : MonoBehaviour
         {
             returnVector.x = (light._Direction / 10) +1;
             returnVector.y = _CurrentLevel - hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel;
+            returnVector.z = (light._Direction / 10) + 1;
+
 
             returnVector.x *= dir.x;
             returnVector.y *= -1;
