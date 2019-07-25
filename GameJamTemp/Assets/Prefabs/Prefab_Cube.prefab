@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 6352739169702304817}
   m_Layer: 10
   m_Name: Prefab_Cube
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -455,6 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a43f5161265bc774d81ac9bc9f40f8ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _BlockLevel: 0
   _VertexParent: {fileID: 7707421121840034032}
   _Shadows:
   - {fileID: 7707421122330438562}
@@ -462,7 +463,6 @@ MonoBehaviour:
   - {fileID: 7707421121345281388}
   - {fileID: 7707421121702344477}
   _ShadowTarget: {fileID: 0}
-  _TopFloor: {fileID: 0}
 --- !u!65 &6352739169702304817
 BoxCollider:
   m_ObjectHideFlags: 0
