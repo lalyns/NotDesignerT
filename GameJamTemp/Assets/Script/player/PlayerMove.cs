@@ -55,7 +55,7 @@ public class PlayerMove : MonoBehaviour
             }
         }
     }
-
+    // 타겟지점으로 움직여주는함수
     void StartMove()
     {
         if (!moveCheck)
@@ -67,7 +67,22 @@ public class PlayerMove : MonoBehaviour
             }
             else
             {
+
+                if (Physics.Raycast(this.transform.position, move - this.transform.position, out RaycastHit hit, 0.6f, (1 << 10))) // 벽일경우
+                {
+                    if (Physics.Raycast(hit.transform.position, move - this.transform.position, 0.6f, (1 << 12) | (1 << 10))) // 벽일경우
+                    {
+                        moveCheck = true;
+                        return;
+                    }
+
+                    Vector3 tmove = move;
+                    tmove.x *= 2;
+                    tmove.z *= 2;
+                    hit.transform.position = Vector3.MoveTowards(hit.transform.position, tmove, speed * Time.deltaTime);
+                }
                 this.transform.position = Vector3.MoveTowards(this.transform.position, move, speed * Time.deltaTime);
+
             }
 
             if (Vector3.Distance(this.transform.position, move) == 0)
@@ -75,6 +90,7 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    // 맵을올라갈때 대각선을 타고 올라가게 해주는함수
     bool MoveRay()
     {
         float maxDistance = 0.2f;
@@ -97,7 +113,7 @@ public class PlayerMove : MonoBehaviour
         return false;
     }
 
-    // 내가지금 가야할거리가 몇x 몇y인가 
+    // 자기 앞에 무엇이 있는지 체크
     Vector3 MoveDir(Vector3 dir)
     {
         Vector3 returnVector = Vector3.zero;
@@ -106,7 +122,11 @@ public class PlayerMove : MonoBehaviour
 
         Vector3 thisPos = this.transform.position;
         thisPos.y -= 0.4f;
-        Debug.DrawRay(thisPos, dir * 10000f, Color.gray);
+
+        if(Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 12))) // 벽일경우
+        {
+            return returnVector; 
+        }
 
         if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 9))) // 그림자블럭이있는지판단
         {
@@ -127,24 +147,21 @@ public class PlayerMove : MonoBehaviour
         }
 
         thisPos.y -= 0.4f;
-        Debug.DrawRay(thisPos, dir * 10000f, Color.cyan);
         if (Physics.Raycast(thisPos, dir, out hit, this.transform.localScale.x, (1 << 9))) // 그림자블럭이 아래에있다면
         {
             returnVector.x = (light._Direction / 10) +1;
-            Debug.Log(hit.transform.gameObject.name);
             returnVector.y = _CurrentLevel - hit.transform.parent.transform.GetComponent<ShadowCastObject>()._BlockLevel;
 
             returnVector.x *= dir.x;
             returnVector.y *= -1;
             returnVector.z *= dir.z;
-            Debug.Log(returnVector);
+
             return returnVector;
         }
 
         return dir;
     }
-
-         
+      
     public void GroundCheck()
     {
         Ray ray = new Ray();

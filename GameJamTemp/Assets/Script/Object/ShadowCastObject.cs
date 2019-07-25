@@ -42,14 +42,11 @@ public class ShadowCastObject : MonoBehaviour
             if(hit.transform.GetComponent<ShadowCastObject>() == null)
             {
                 _BlockLevel = 0;
-                Debug.Log(transform.name + " : 0으로만든다");
             }
             else
             {
-                Debug.Log(transform.name + " : 아래에 있음");
                 _BlockLevel = hit.transform.GetComponent<ShadowCastObject>()._BlockLevel + 1;
                 break;
-
             }
         }
 
