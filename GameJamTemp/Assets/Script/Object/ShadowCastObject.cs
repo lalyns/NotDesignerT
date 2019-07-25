@@ -18,26 +18,16 @@ public class ShadowCastObject : MonoBehaviour
     Vector3 _CheckDirection;
     bool _IsConnected;
 
-    Transform[] _ShadowVertices;
     GameObject _ShadowObject;
     public GameObject[] _Shadows;
-    MeshFilter _ShadowMeshFilter;
-    MeshRenderer _ShadowMeshRenderer;
-    MeshCollider _ShadowCollider;
 
     public GameObject _ShadowTarget;
-
-    public GameObject _TopFloor;
 
     public void Awake()
     {
         _LightSource = GameObject.FindGameObjectWithTag("LightSource");
         _LightSourceScript = _LightSource.GetComponent<LightSource>();
         _Ground = GameObject.FindGameObjectWithTag("Ground");
-
-
-        SetLevel();
-        //SetVertices();
 
     }
 
@@ -57,11 +47,11 @@ public class ShadowCastObject : MonoBehaviour
                 continue;
             }
 
-            if (hit.transform.GetComponent<ShadowCastObject>() == null)
+            if (hit.transform.tag == "Ground")
             {
-                _BlockLevel = 0;
+                _BlockLevel = 1;
             }
-            else
+            else if(hit.transform.tag == "Block")
             {
                 _BlockLevel = hit.transform.GetComponent<ShadowCastObject>()._BlockLevel + 1;
                 break;
@@ -71,16 +61,36 @@ public class ShadowCastObject : MonoBehaviour
 
     public void Update()
     {
+        SetLevel();
 
         _LightPosition = _LightSourceScript._LightPosition;
 
         DecideShadowCastPosition(_LightSource);
 
+        bool isGround = true;
+        if (_ShadowObject != null)
+        {
+            isGround &= GroundCheck(_ShadowObject.transform.position, Vector3.down);
+        }
+
         Vector3 lightDirection = GetLightDirection(_LightSource, _Ground);
 
         _IsConnected = CheckConnected();
 
-        if (!_IsConnected && _BlockLevel > 0 &&
+
+        foreach (GameObject shadow in _Shadows)
+        {
+            shadow.SetActive(false);
+        }
+
+        if(this.transform.name == "CUBE (11)")
+        {
+            Debug.Log(isGround);
+            Debug.Log(_IsConnected);
+
+        }
+
+        if (!_IsConnected && _BlockLevel > 1 && isGround &&
             _LightPosition != LightSource.LightSourcePosition.Center)
         {
             ShadowMesh();
@@ -88,9 +98,9 @@ public class ShadowCastObject : MonoBehaviour
 
     }
 
-    public Vector3 GroundHitPoint(Vector3 start, Vector3 direction)
+    public bool GroundCheck(Vector3 start, Vector3 direction)
     {
-        Vector3 hitPoint = Vector3.zero;
+        bool isGround = false;
 
         Ray ray = new Ray();
         ray.origin = start;
@@ -99,21 +109,22 @@ public class ShadowCastObject : MonoBehaviour
         RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * GameManager.RAY_DISTANCE, 
             GameManager.RAY_DISTANCE, GameManager.LAYER_BLOCK, QueryTriggerInteraction.Ignore);
 
-        foreach(RaycastHit hit in hitAll)
+        Debug.DrawRay(start, direction * GameManager.RAY_DISTANCE, Color.red);
+
+        foreach (RaycastHit hit in hitAll)
         {
             if (hit.transform == this.transform)
                 continue;
+
             if (hit.transform != null)
             {
-                Debug.DrawRay(start, direction * GameManager.RAY_DISTANCE);
                 _ShadowTarget = hit.transform.gameObject;
-                hitPoint = hit.point;
-
+                isGround = true;
                 break;
             }
         }
-            
-        return hitPoint;
+
+        return isGround;
     }
 
     public Vector3 GetLightDirection(GameObject LightSource, GameObject Ground)
@@ -126,10 +137,6 @@ public class ShadowCastObject : MonoBehaviour
 
     public void DecideShadowCastPosition(GameObject lightSource)
     {
-        foreach(GameObject shadow in _Shadows)
-        {
-            shadow.SetActive(false);
-        }
         // 광원이 오른쪽에 존재
         if(_LightPosition == LightSource.LightSourcePosition.Right)
         {
@@ -145,13 +152,13 @@ public class ShadowCastObject : MonoBehaviour
         // 광원이 위쪽에 존재
         else if (_LightPosition == LightSource.LightSourcePosition.Up)
         {
-            _CheckDirection = Vector3.forward;
+            _CheckDirection = Vector3.back;
             _ShadowObject = _Shadows[2];
         }
         // 광원이 아래쪽에 존재
         else if(_LightPosition == LightSource.LightSourcePosition.Down)
         {
-            _CheckDirection = Vector3.back;
+            _CheckDirection = Vector3.forward;
             _ShadowObject = _Shadows[0];
         }
     }
