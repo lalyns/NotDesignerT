@@ -74,7 +74,7 @@ public class ShadowCastObject : MonoBehaviour
         bool isGround = true;
         if (_ShadowFirstObject != null)
         {
-            isGround &= GroundCheck(_ShadowFirstObject.transform.position, Vector3.down);
+            isGround &= GroundCheck(_ShadowFirstObject.transform.position, lightDirection);
         }
 
         _IsConnected = CheckConnected();
@@ -90,7 +90,7 @@ public class ShadowCastObject : MonoBehaviour
             shadow.SetActive(false);
         }
 
-        if (!_IsConnected && _BlockLevel > 1 && isGround &&
+        if (!_IsConnected && _BlockLevel > 1 && 
             _LightPosition != LightSource.LightSourcePosition.Center)
         {
             SetActiveShadowFirst();
