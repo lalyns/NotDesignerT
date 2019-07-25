@@ -18,13 +18,25 @@ public class ShadowCastObject : MonoBehaviour
     bool _IsConnected;
 
     Transform[] _ShadowVertices;
-    public GameObject shadowObject;
-    public MeshFilter shadowMeshFilter;
-    public MeshRenderer shadowMeshRenderer;
-    public MeshCollider collider;
+    public GameObject _ShadowObject;
+    public MeshFilter _ShadowMeshFilter;
+    public MeshRenderer _ShadowMeshRenderer;
+    public MeshCollider _Collider;
 
+    public GameObject _TopFloor;
 
     public void Awake()
+    {
+        _LightSource = GameObject.FindGameObjectWithTag("LightSource");
+        _LightSourceScript = _LightSource.GetComponent<LightSource>();
+        _Ground = GameObject.FindGameObjectWithTag("Ground");
+
+        SetLevel();
+        SetVertices();
+
+    }
+
+    public void SetLevel()
     {
         Ray ray = new Ray();
         ray.origin = this.transform.position;
@@ -32,55 +44,67 @@ public class ShadowCastObject : MonoBehaviour
 
         RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 100f, 100f, 1 << 10, QueryTriggerInteraction.Ignore);
 
-        foreach( RaycastHit hit in hitAll)
+        foreach (RaycastHit hit in hitAll)
         {
-            if(hit.transform == this.transform)
+            if (hit.transform == this.transform)
             {
                 continue;
             }
 
-            if(hit.transform.GetComponent<ShadowCastObject>() == null)
+            if (hit.transform.GetComponent<ShadowCastObject>() == null)
             {
                 _BlockLevel = 0;
-                Debug.Log(transform.name + " : 0으로만든다");
             }
             else
             {
-                Debug.Log(transform.name + " : 아래에 있음");
                 _BlockLevel = hit.transform.GetComponent<ShadowCastObject>()._BlockLevel + 1;
                 break;
-
             }
         }
+    } 
 
-        _LightSource = GameObject.FindGameObjectWithTag("LightSource");
-        _LightSourceScript = _LightSource.GetComponent<LightSource>();
+    public bool SetTopFloor()
+    {
+        bool setFloor = false;
 
-        _Ground = GameObject.FindGameObjectWithTag("Ground");
+        Ray ray = new Ray();
+        ray.origin = this.transform.position;
+        ray.direction = Vector3.up;
 
+        RaycastHit[] hitAll = Physics.RaycastAll(ray.origin, ray.direction * 100f, 100f, 1 << 10, QueryTriggerInteraction.Ignore);
+
+        if(hitAll.Length == 0)
+        {
+            setFloor = true;
+        }
+
+        return setFloor;
+    }
+
+    public void SetVertices()
+    {
         Transform[] temp1 = _VertexParent.GetComponentsInChildren<Transform>();
 
         _Vertices = new Transform[temp1.Length - 1];
         int i = 0;
 
-        foreach(Transform vertex in temp1)
+        foreach (Transform vertex in temp1)
         {
             if (vertex == _VertexParent)
                 continue;
             else
             {
                 _Vertices[i++] = vertex;
-                //Debug.Log(_Vertices[i++].name);
             }
-                    
+
         }
 
-        Transform[] temp2 = shadowObject.GetComponentsInChildren<Transform>();
-        _ShadowVertices = new Transform[temp2.Length -1];
+        Transform[] temp2 = _ShadowObject.GetComponentsInChildren<Transform>();
+        _ShadowVertices = new Transform[temp2.Length - 1];
         i = 0;
         foreach (Transform shadowVertex in temp2)
         {
-            if (shadowVertex == shadowObject.transform)
+            if (shadowVertex == _ShadowObject.transform)
                 continue;
             else
             {
@@ -88,8 +112,6 @@ public class ShadowCastObject : MonoBehaviour
             }
 
         }
-
-
     }
 
     public void Update()
@@ -122,9 +144,10 @@ public class ShadowCastObject : MonoBehaviour
         else
         {
             Mesh temp = new Mesh();
-            shadowMeshFilter.mesh = temp;
+            _ShadowMeshFilter.mesh = temp;
         }
 
+        _TopFloor.SetActive(SetTopFloor());
     }
 
     public Vector3 GroundHitPoint(Transform start, Vector3 direction)
@@ -271,8 +294,8 @@ public class ShadowCastObject : MonoBehaviour
         }
         ;
 
-        shadowMeshFilter.mesh = shadowMesh;
-        collider.sharedMesh = shadowMesh;
+        _ShadowMeshFilter.mesh = shadowMesh;
+        _Collider.sharedMesh = shadowMesh;
     }
     
 }
